@@ -1,0 +1,24 @@
+QSplitter {
+    background-color: transparent;
+    margin: 0px;
+    padding: 0px;
+}
+
+QSplitter::handle {
+    background-color:rgb(100, 100, 100);
+    margin: 0px;
+    padding: 0px;
+    border: none;
+}
+
+QSplitter::handle:horizontal {
+    width: 8px;
+}
+
+QSplitter::handle:vertical {
+    height: 8px;
+}
+
+QSplitter::handle:pressed {
+    background-color:rgb(150, 150, 150);
+}
