@@ -6,5 +6,5 @@ test.py
 venv/ 
 
 # PYTHON DERLEYİCİ DOSYALARI
-program/__pycache__/
-program/**/*.pyc
+app/__pycache__/
+app/**/*.pyc
