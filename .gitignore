@@ -1,1 +1,10 @@
+
+# ÖZEL DOSYALAR
+test.py
+
+# SANAL ORTAM
 venv/ 
+
+# PYTHON DERLEYİCİ DOSYALARI
+program/__pycache__/
+program/**/*.pyc
