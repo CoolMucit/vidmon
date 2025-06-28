@@ -1,10 +1,11 @@
 
-# ÖZEL DOSYALAR
+# GELİŞTİRİCİ DOSYALARI
+.tools/
 test.py
 
-# SANAL ORTAM
+# PYTHON SANAL ORTAMI
 venv/ 
 
-# PYTHON DERLEYİCİ DOSYALARI
-app/__pycache__/
-app/**/*.pyc
+# PYTHON DERLEYİCİLERİ
+__pycache__/
+**/*.pyc

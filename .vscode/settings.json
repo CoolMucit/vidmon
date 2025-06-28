@@ -9,5 +9,8 @@
     "terminal.integrated.env.windows": {
         "VIRTUAL_ENV": "${workspaceFolder}\\venv",
         "PATH": "${workspaceFolder}\\venv\\Scripts;${env:PATH}"
-    }
+    },
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "files.enableTrash": true
 }
