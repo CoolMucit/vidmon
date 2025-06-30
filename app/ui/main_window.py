@@ -1,29 +1,44 @@
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QTabWidget
-from app.ui.widgets.media_panel_widget import MediaPanel
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtCore import pyqtSignal
 import os
 
+from app.profiles.user_profile import UserProfile
+
 class MainWindow(QMainWindow):
-    def __init__(self):
+    closed = pyqtSignal()  # Sinyal tanımlama
+
+    def __init__(self, username):
         super().__init__()
+
+        self.username = username
+
+        self.load_UI()
+        self.load_styles()
+        self.load_user_profile(self.username)
+        self.load_options(self.username)
+
+    def load_UI(self):
         uic.loadUi("app/ui/interfaces/main_window_interface.ui", self)
-        self.showMaximized() 
 
-        # Sekme konumunu değiştirmek için:
-        self.setTabPosition(Qt.TopDockWidgetArea, QTabWidget.North)
-        self.setTabPosition(Qt.BottomDockWidgetArea, QTabWidget.North)
-        self.setTabPosition(Qt.LeftDockWidgetArea, QTabWidget.North)
-        self.setTabPosition(Qt.RightDockWidgetArea, QTabWidget.North)
-
-        # medya paneli ayarları
-        self.media_panel = MediaPanel(
-            media_panel_widget=self.mediaPanel
-        )
-
-        # STYLE qss
+    def load_styles(self):
         style_path = os.path.join("app", "assets", "styles", "main_window.qss")
         with open(style_path, "r") as file:
             style = file.read()
             self.setStyleSheet(style)
+
+    def load_user_profile(self, username):
+        self.user_profile = UserProfile(username)
+        self.user_profile.load()
+
+    def load_options(self, username):
+        self.setWindowTitle(f"Vidmon ({username})")
+        # self.showMaximized()
+
+    # KAPATILMA SİNYALİ YAYAR
+    def closeEvent(self, event):
+        self.closed.emit()  # sinyal yayılır
+        super().closeEvent(event)
+
+        
 

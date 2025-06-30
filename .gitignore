@@ -1,6 +1,7 @@
 
 # GELİŞTİRİCİ DOSYALARI
 .tools/
+user_data/
 test.py
 
 # PYTHON SANAL ORTAMI
