@@ -1,12 +1,14 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtCore import pyqtSignal
 import os
+
+from app.common.constants.global_constants import APP_NAME
 
 from app.profiles.user_profile import UserProfile
 
+from app.common.signals.signals import signals
+
 class MainWindow(QMainWindow):
-    closed = pyqtSignal()  # Sinyal tanımlama
 
     def __init__(self, username):
         super().__init__()
@@ -32,13 +34,9 @@ class MainWindow(QMainWindow):
         self.user_profile.load()
 
     def load_options(self, username):
-        self.setWindowTitle(f"Vidmon ({username})")
-        # self.showMaximized()
+        self.setWindowTitle(APP_NAME + f" ({username})")
+        self.showMaximized()
 
-    # KAPATILMA SİNYALİ YAYAR
     def closeEvent(self, event):
-        self.closed.emit()  # sinyal yayılır
+        signals.main_window_closed.emit()
         super().closeEvent(event)
-
-        
-
