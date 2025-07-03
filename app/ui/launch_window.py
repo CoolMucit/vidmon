@@ -65,23 +65,12 @@ class LaunchWindow(QMainWindow):
         print(f"Yeni proje penceresi açıldı: {username}")
         self.close()
 
-    # @pyqtSlot()
-    # def create_profile(self):
-    #     username = self.profileLine.text().strip()
 
-    #     if not username:
-    #         QMessageBox.warning(self, "Hata", "Kullanıcı adı boş olamaz.")
-    #         return
 
-    #     if self.profileManager.profile_exists(username):
-    #         QMessageBox.warning(self, "Uyarı", "Bu kullanıcı zaten var.")
-    #         return
 
-    #     self.profileManager.create_profile(username)
-    #     self.load_profiles()
 
-    #     # Geri ana sayfaya dön
-    #     self.stack.setCurrentIndex(0)
-    #     self.profileLine.clear()
 
-    
+
+
+
+

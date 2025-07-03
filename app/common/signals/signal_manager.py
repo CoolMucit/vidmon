@@ -9,9 +9,8 @@ class SignalManager(QObject):
     main_window_closed = pyqtSignal()  # ana pencere kapatıldı
 
     profileSettingsButton_clicked = pyqtSignal(object)  # profil ayarları penceresi açıldı
+
     # Signals for Profile Settings Dialog
-
-
     confirmProfileButton_clicked = pyqtSignal()  # profil değişiklikleri onaylandı
 
     #! Signals for Main Window

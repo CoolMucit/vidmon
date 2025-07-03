@@ -48,9 +48,6 @@ class ProfileSettingsDialogWidget(QDialog):
         self.confirmProfileButton.clicked.connect(self.confirm_changes)
         self.cancelProfileButton.clicked.connect(self.cancel_changes)
 
-    def show_message(self, title, message):
-        QMessageBox.information(self, title, message)
-
     def create_profile(self):
         new_name, ok = QInputDialog.getText(
             self,
@@ -62,7 +59,7 @@ class ProfileSettingsDialogWidget(QDialog):
             new_name = new_name.strip()
 
             if new_name in self.temporary_profiles:
-                self.show_message("Uyarı", "Bu isim zaten var.")
+                QMessageBox.information(self, "Uyarı", "Bu isim zaten var.")
                 return
 
             self.temporary_profiles.append(new_name)
@@ -114,7 +111,7 @@ class ProfileSettingsDialogWidget(QDialog):
             self.profile_manager.create_profile(name)
 
         signals.confirmProfileButton_clicked.emit()  # Profil değişikliklerini onaylar
-        self.show_message("Başarılı", "Profil değişiklikleri kaydedildi.")
+        QMessageBox.information(self, "Başarılı", "Profil değişiklikleri kaydedildi.")
         self.close()
 
     def cancel_changes(self):

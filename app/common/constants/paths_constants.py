@@ -10,6 +10,10 @@ BASE_DIR = find_project_root(APP_NAME)
 # LOGS_DIR = BASE_DIR / "logs"
 # ASSETS_DIR = BASE_DIR / "assets"
 
+#! === KONUMLAR ===
+DOCK_LAYOUT_FILE = BASE_DIR / "user_data" / "dock_layout.json"
+
+
 #! === Kullanıcı dizinleri ===
 # USER_HOME = Path.home()
 # VIDMON_USER_DIR = USER_HOME / "VidmonProjects"

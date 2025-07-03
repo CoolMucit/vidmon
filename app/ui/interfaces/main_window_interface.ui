@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
-    <height>500</height>
+    <width>1250</width>
+    <height>750</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -36,6 +36,34 @@
     </size>
    </property>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1250</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="dockMenu">
+    <property name="title">
+     <string>Layout</string>
+    </property>
+    <addaction name="actionSaveDocks"/>
+    <addaction name="actionMyDocks"/>
+   </widget>
+   <addaction name="dockMenu"/>
+  </widget>
+  <action name="actionSaveDocks">
+   <property name="text">
+    <string>save panels</string>
+   </property>
+  </action>
+  <action name="actionMyDocks">
+   <property name="text">
+    <string>my docks</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

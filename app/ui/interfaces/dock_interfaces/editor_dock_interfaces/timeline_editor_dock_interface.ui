@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>globalPropertyDock</class>
- <widget class="QDockWidget" name="globalPropertyDock">
+ <class>timelineEditorDock</class>
+ <widget class="QDockWidget" name="timelineEditorDock">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
-    <height>490</height>
+    <width>499</width>
+    <height>402</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Global Properties</string>
+   <string>Timeline Editor</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QWidget" name="widget" native="true">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <layout class="QFormLayout" name="formLayout"/>
-       </item>
-      </layout>
+      <layout class="QVBoxLayout" name="verticalLayout_2"/>
      </widget>
     </item>
    </layout>

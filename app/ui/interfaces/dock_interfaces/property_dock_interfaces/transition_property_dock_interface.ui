@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Transition Properties</string>
   </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QVBoxLayout" name="verticalLayout"/>
+  </widget>
  </widget>
  <resources/>
  <connections/>
