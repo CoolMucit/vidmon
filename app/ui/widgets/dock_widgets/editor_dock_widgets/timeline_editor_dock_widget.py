@@ -1,47 +1,27 @@
-from PyQt5.QtWidgets import (QDockWidget, QGraphicsView, QGraphicsScene, 
-                            QGraphicsRectItem, QSlider, QGraphicsLineItem, QGraphicsTextItem)
-from PyQt5.QtCore import Qt, QRectF
+from PyQt5.QtWidgets import QDockWidget, QGraphicsView, QPushButton, QSlider
 from PyQt5 import uic
+
+from app.core.editor.timeline.timeline_scene import TimelineScene
+from app.core.editor.timeline.timeline_scale import TimelineScale
+
 
 class TimelineEditorDockWidget(QDockWidget):
     def __init__(self):
         super().__init__()
 
+        # UI yükle ve elemanları bul
         self.load_UI()
         self.find_UI_elements()
 
-
-        self.track_height = 100
-        self.track_count = 3
-        self.timeline_width_seconds = 60  # Varsayılan timeline genişliği (saniye)
-        self.pixels_per_second = 100      # 1 saniye = 100px
-
-        # Zaman cetveli ve timeline sahnelerini oluştur
-        self.timeline_ruler_scene = QGraphicsScene(self)
-        self.timeline_scene = QGraphicsScene(self)
-
-        # QGraphicsView'lere sahneleri ata
-        self.timelineRulerGraphicsView.setScene(self.timeline_ruler_scene)
+        #! EDITOR SAHNESİNİ OLUŞTUR
+        self.timeline_scene = TimelineScene()
         self.timelineEditorGraphicsView.setScene(self.timeline_scene)
 
-        # Trackları ve zaman çizelgesini çiz
-        self.draw_tracks()
-        self.draw_time_ruler()
-
-        #! Slider'ı bağla
-        self.timelineScaleControlSlider.valueChanged.connect(self.scale_timeline)
-
-        #! Scroll senkronizasyonu
-        self.timelineRulerGraphicsView.horizontalScrollBar().valueChanged.connect(
-            self.timelineEditorGraphicsView.horizontalScrollBar().setValue
-        )
-        self.timelineEditorGraphicsView.horizontalScrollBar().valueChanged.connect(
-            self.timelineRulerGraphicsView.horizontalScrollBar().setValue
-        )
-
-
-
-
+        # Scale kontrolü
+        self.timeline_scale = TimelineScale(self.timelineScaleControlSlider)
+        self.timeline_scale.ruler_ref = self.timeline_scene.timeline_ruler  # Ruler referansı ver
+        #! Scale slider değiştiğinde çağrılacak metodu bağla
+        self.timelineScaleControlSlider.valueChanged.connect(self.on_scale_slider_changed)
 
 
     def load_UI(self):
@@ -49,194 +29,26 @@ class TimelineEditorDockWidget(QDockWidget):
 
     def find_UI_elements(self):
         self.timelineEditorGraphicsView: QGraphicsView = self.findChild(QGraphicsView, "timelineEditorGraphicsView")
-        self.timelineRulerGraphicsView: QGraphicsView = self.findChild(QGraphicsView, "timelineRulerGraphicsView")
         self.timelineScaleControlSlider: QSlider = self.findChild(QSlider, "timelineScaleControlSlider")
+        self.timelineCreateTrackButton: QPushButton = self.findChild(QPushButton, "timelineCreateTrackButton")
+        self.timelineRemoveTrackButton: QPushButton = self.findChild(QPushButton, "timelineRemoveTrackButton")
 
-
-
-
-    def draw_tracks(self):
+    def on_scale_slider_changed(self, value: int):
         """
-        Timeline üzerindeki trackları çizer.
+        Slider değeri değiştiğinde zaman cetvelinin ölçeğini günceller.
         """
-        total_width = self.timeline_width_seconds * self.pixels_per_second
-        colors = [Qt.red, Qt.green, Qt.blue]
+        # TimelineScale üzerinden scale faktörünü al
+        scale_factor = self.timeline_scale.get_current_pixel_per_second()
 
-        for index in range(self.track_count):
-            y_position = index * self.track_height
-            rect = QGraphicsRectItem(0, y_position, total_width, self.track_height)
-            rect.setBrush(colors[index % len(colors)])
-            rect.setZValue(-1)  # Arka plan
-            self.timeline_scene.addItem(rect)
+        print(f"[Slider] Scale factor güncellendi: {scale_factor:.2f} px/s")
 
-        # Scene genişliğini ayarla
-        self.timeline_scene.setSceneRect(QRectF(0, 0, total_width, self.track_count * self.track_height))
+        # TimelineRuler'ın ölçeğini güncelle
+        self.timeline_scene.timeline_ruler.set_scale_factor(scale_factor)
 
+        # Sahne boyutunu güncelle (gerekiyorsa)
+        scene_width = self.timeline_scene.timeline_ruler.duration * scale_factor + self.timeline_scene.timeline_ruler.trackHeaderWidth
+        self.timeline_scene.setSceneRect(0, 0, scene_width, self.timeline_scene.sceneRect().height())
 
-
-    def draw_time_ruler(self):
-        """
-        Zaman cetvelini çizer.
-        """
-        total_width = self.timeline_width_seconds * self.pixels_per_second
-        height = 40  # Zaman cetvelinin yüksekliği
-        second_step = 1  # Her saniyede bir çizgi
-
-        for second in range(self.timeline_width_seconds + 1):
-            x = second * self.pixels_per_second
-            line = QGraphicsLineItem(x, 0, x, height)
-            self.timeline_ruler_scene.addItem(line)
-
-            # Zaman etiketi
-            label = QGraphicsTextItem(f"{second}s")
-            label.setPos(x + 2, height / 2)
-            self.timeline_ruler_scene.addItem(label)
-
-        # Scene genişliğini ayarla
-        self.timeline_ruler_scene.setSceneRect(QRectF(0, 0, total_width, height))
-
-
-
-
-    #!   # Slider ile timeline ölçeğini değiştirir
-    def scale_timeline(self, value):
-        scale_factor = value / 50  # Slider'ın orta değeri 50 → 1x zoom
-
-        if scale_factor <= 0:
-            scale_factor = 0.1  # Minimum ölçek
-
-        # Yeni ölçeği uygula
-        self.timelineRulerGraphicsView.resetTransform()
-        self.timelineEditorGraphicsView.resetTransform()
-
-        self.timelineRulerGraphicsView.scale(scale_factor, 1)
-        self.timelineEditorGraphicsView.scale(scale_factor, 1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#     def add_clip_to_timeline(self, file_path: str, start_time: int, duration: int):
-#         clip = Clip(file_path, start_time, duration)
-#         self.timeline_container.get_track(0).add_clip(clip)
-
-#         # Timeline’a görsel olarak çiz
-#         self.timeline_view.draw_clip(start_time, duration)
-
-#     def draw_playhead(self, position_x: int, timeline_height: int):
-#         playhead = QGraphicsRectItem(position_x * self.time_scale, 0, 2, timeline_height)
-#         playhead.setBrush(Qt.red)
-#         self.timelineEditorGraphicsView.scene.addItem(playhead)
-
-#     def draw_clip(self, start_time: int, duration: int, y_pos: int = 0):
-#         x = start_time * self.time_scale
-#         width = duration * self.time_scale
-#         rect = QGraphicsRectItem(x, y_pos, width, 50)
-#         rect.setBrush(Qt.green)
-#         self.timelineEditorGraphicsView.scene.addItem(rect)
-
-# #! ==================== interface ===============================================================================
-# class TimelineView(QGraphicsView):
-#     def __init__(self, parent=None):
-#         super().__init__(parent)
-#         self.scene = QGraphicsScene(self)
-#         self.setScene(self.scene)
-
-#         # Örnek bir klip çiz
-#         rect = QGraphicsRectItem(0, 0, 100, 50)  # x, y, width, height
-#         rect.setBrush(Qt.blue)
-#         self.scene.addItem(rect)
-
-
-# #TODO ============ daha sonra ayrı dosyalara ayrılacak ============================================================
-# class TimelineContainer:
-#     def __init__(self):
-#         self.tracks = []  # Video, Ses, Metin katmanları
-#         self.playhead_position = 0
-
-#     def add_track(self, track):
-#         self.tracks.append(track)
-
-#     def get_track(self, index):
-#         return self.tracks[index]
-
-
-# class Track:
-#     def __init__(self, track_type: str):
-#         self.track_type = track_type  # "video", "audio", "text"
-#         self.clips = []
-
-#     def add_clip(self, clip):
-#         self.clips.append(clip)
-
-
-# class Clip:
-#     def __init__(self, file_path: str, start_time: int, duration: int):
-#         self.file_path = file_path
-#         self.start_time = start_time
-#         self.duration = duration
-
-
-# #! timelien wiew ----------------------------
-# class TimelineView(QGraphicsView):
-#     def __init__(self, parent=None):
-#         super().__init__(parent)
-#         self.scene = QGraphicsScene(self)
-#         self.setScene(self.scene)
-
-#         self.time_scale = 50  # 1 saniye = 50 piksel
-
-#     def draw_playhead(self, position_x: int, timeline_height: int):
-#         playhead = QGraphicsRectItem(position_x * self.time_scale, 0, 2, timeline_height)
-#         playhead.setBrush(Qt.red)
-#         self.scene.addItem(playhead)
-
-#     def draw_clip(self, start_time: int, duration: int, y_pos: int = 0):
-#         x = start_time * self.time_scale
-#         width = duration * self.time_scale
-#         rect = QGraphicsRectItem(x, y_pos, width, 50)
-#         rect.setBrush(Qt.green)
-#         self.scene.addItem(rect)
-
-
-# #! özellikler ----------------------------
-#         # QGraphicsScene’i yükle
-#         self.timelineEditorGraphicsView.scene = QGraphicsScene(self)
-#         self.timelineEditorGraphicsView.setScene(self.timelineEditorGraphicsView.scene)
-
-#         self.time_scale = 50  # 1 saniye = 50 piksel
-
-#         self.timeline_container = TimelineContainer()
-
-#         # Playhead çiz
-#         self.draw_playhead(0, 100)
-
-#         # İlk video track'i ekle
-#         self.timeline_container.add_track(Track(track_type="video"))
-
-#         # Timeline görünümü
-#         self.timeline_view = TimelineView(self)
-#         self.timeline_height = 100
-#         self.timeline_view.draw_playhead(0, self.timeline_height)
-
-#         # İlk video track'i ekle
-#         self.timeline_container.add_track(Track(track_type="video"))
-
-
-
-
-
-
+        # Yeniden çiz
+        self.timeline_scene.timeline_ruler.update()
 

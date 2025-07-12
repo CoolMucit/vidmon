@@ -18,6 +18,20 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QPushButton" name="timelineCreateTrackButton">
+        <property name="text">
+         <string>Create Track</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="timelineRemoveTrackButton">
+        <property name="text">
+         <string>Remove Track</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -50,22 +64,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-    <item>
-     <widget class="QGraphicsView" name="timelineRulerGraphicsView">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>50</height>
-       </size>
-      </property>
-     </widget>
     </item>
     <item>
      <widget class="QGraphicsView" name="timelineEditorGraphicsView"/>
